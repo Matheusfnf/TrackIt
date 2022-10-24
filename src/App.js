@@ -14,8 +14,8 @@ function App() {
 
   return (
     <div className="App">
-      <UserProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <UserProvider>
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/cadastro" element={<Cadastro />} />
@@ -23,8 +23,8 @@ function App() {
             <Route path="/hoje" element={<Hoje />} />
             <Route path="/historico" element={<Historico />} />
           </Routes>
-        </BrowserRouter>
-      </UserProvider>
+        </UserProvider>
+      </BrowserRouter>
     </div>
   );
 }

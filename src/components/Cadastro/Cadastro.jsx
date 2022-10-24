@@ -11,22 +11,7 @@ export default function Cadastro() {
   const [senha, setSenha] = useState("");
   const [foto, setFoto] = useState("");
 
-  // const URL =
-  //   "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up";
-  // const postObj = {
-  //   email,
-  //   name: nome,
-  //   image: foto,
-  //   password: senha,
-  // };
-
-  // const promise = axios.post(URL)
-  //   promise.then((res) =>{
-  //   console.log(res.data)
-
-  //   promise.catch((err) => {
-  //       console.log(err.response.data)
-  //   })
+ 
 
   const checkForm = () => {
     if (nome.length < 3 || nome.length > 20) {

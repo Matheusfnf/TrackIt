@@ -28,9 +28,11 @@ export default function Login() {
     try {
       if (!checkForm()) return;
       const rsp = context.signIn(email, senha);
+      console.log(rsp)
       if (rsp) navigate("/habitos");
     } catch (e) {
       console.log(e);
+      alert("oi")
     }
   };
 

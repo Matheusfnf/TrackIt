@@ -1,3 +1,4 @@
+import { findByLabelText } from "@testing-library/react";
 import { setCookie } from "nookies";
 import React, { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +8,8 @@ export const UserContext = createContext({});
 
 export function UserProvider({ children }) {
   const [state, setState] = useState([]);
+  const navigate = useNavigate()
+  
 
 
   async function signIn(email, senha) {
@@ -20,6 +23,10 @@ export function UserProvider({ children }) {
           maxAge: 60 * 60 * 24,
           path: "/",
         });
+        
+        
+
+        
 
         setCookie(undefined, "userauth.image", response.data.image, {
           maxAge: 60 * 60 * 24,
@@ -28,13 +35,14 @@ export function UserProvider({ children }) {
         return "ok";
       }
 
-      alert("Erro!");
+      
       return false;
     } catch (e) {
       console.log(e);
-      alert("Erro!");
-
-      return false;
+      navigate("/")
+      alert("Conta inválida, por favor faça seu cadastro!")
+      return false
+      
     }
   }
 

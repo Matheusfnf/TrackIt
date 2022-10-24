@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../service/api";
 import FootBar from "../FootBar/FootBar";
-import BeatLoader from "../Loader";
+
 import NavBar from "../NavBar/Navbar";
 import lixeira from "../../images/lixeira.png";
 import {
