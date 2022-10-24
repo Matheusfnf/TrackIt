@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { CircularProgressbar } from "react-circular-progressbar";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../context/UserContext";
 import api from "../../service/api";
@@ -38,7 +38,15 @@ export default function FootBar() {
           <div style={{ width: 91, height: 91, marginBottom: "50px" }}>
             <CircularProgressbar
               value={porcentagem}
-              text={(String(porcentagem) + "%")}
+              text={"Hoje"}
+              background
+              backgroundPadding={6}
+              styles={buildStyles({
+                backgroundColor: "#3e98c7",
+                textColor: "#ffffff",
+                pathColor: "#ffffff",
+                trailColor: "transparent",
+              })}
             />
           </div>
         </Link>

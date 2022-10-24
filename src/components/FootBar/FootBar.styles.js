@@ -11,6 +11,7 @@ export const Footstyled = styled.div`
   bottom: 0;
   left: 0;
   
+  
   a:link{
     text-decoration: none;
   }

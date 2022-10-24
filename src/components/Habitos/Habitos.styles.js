@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
 export const HabitosStyled = styled.div`
+  
+  
+  
   h1 {
     margin: 10%;
     font-size: 23px;
@@ -24,12 +27,13 @@ export const HabitosStyled = styled.div`
     font-size: 27px;
     color: white;
     border-radius: 5px;
+    margin-right: 5%;
   }
 `;
 
 export const Container = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 
   button {
