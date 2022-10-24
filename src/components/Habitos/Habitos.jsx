@@ -16,12 +16,10 @@ import {
   ListaeLixeira,
   SalvarECancelar,
 } from "./Habitos.styles";
-import axios from "axios";
 import { parseCookies } from "nookies";
 
 export default function Habitos() {
   const { "userauth.token": token } = parseCookies();
-  const [loading, setLoading] = useState(false);
   const [verdadeiro, setVerdadeiro] = useState(true);
   const [lista, setLista] = useState([]);
   const [dias, setDias] = useState([
@@ -67,43 +65,6 @@ export default function Habitos() {
       ],
     },
   ]);
-  // const [diasSelecionados, setDiasSelecionados] = useState([
-  //   {
-  //     dia: "D",
-  //     numeral: 0,
-  //     ativo: false,
-  //   },
-  //   {
-  //     dia: "S",
-  //     numeral: 1,
-  //     ativo: false,
-  //   },
-  //   {
-  //     dia: "T",
-  //     numeral: 2,
-  //     ativo: false,
-  //   },
-  //   {
-  //     dia: "Q",
-  //     numeral: 3,
-  //     ativo: false,
-  //   },
-  //   {
-  //     dia: "Q",
-  //     numeral: 4,
-  //     ativo: false,
-  //   },
-  //   {
-  //     dia: "S",
-  //     numeral: 5,
-  //     ativo: false,
-  //   },
-  //   {
-  //     dia: "S",
-  //     numeral: 6,
-  //     ativo: false,
-  //   },
-  // ]);
 
   const handlePost = async (obj) => {
     try {
@@ -175,7 +136,7 @@ export default function Habitos() {
       const response = await api.get("/api/v2/trackit/habits");
       setLista(response.data);
     })();
-  }, []);
+  }, [dias]);
 
   async function deleteLista(id) {
     try {
@@ -184,20 +145,11 @@ export default function Habitos() {
           Authorization: `Bearer ${token}`,
         },
       });
+      window.location.reload();
     } catch (e) {
       console.log(e);
     }
   }
-
-  const fetchData = async () => {
-    setLoading(true);
-    await fetch.then(() => {});
-    setLoading(false);
-  };
-
-  const closebox = () => {
-    setVerdadeiro(false);
-  };
 
   return (
     <>
@@ -258,48 +210,78 @@ export default function Habitos() {
         </Container>
         {dias.map((dia, index) => {
           return (
-            <div className="caixa" key={index}>
-              <CaixaContainer>
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}
-                >
-                  <input
-                    id="nomeDoHabito"
-                    type="text"
-                    placeholder="nome do hábito"
-                    onChange={(e) => {
-                      const valor = e.target.value;
-                      const allDays = [...dias];
-                      allDays[index].nomehabito = valor;
-                      setDias(allDays);
-                    }}
-                  />
-                  <ContainerButtons>
-                    {dia.dias.map((e) => {
-                      return (
-                        <DayOfTheWeek
-                          ativo={e.ativo}
-                          key={e.numeral}
-                          onClick={(event) => {
-                            event.preventDefault();
-                            const semana = [...dia.dias];
-                            const indice = semana.indexOf(e);
-                            e.ativo = !e.ativo;
-                            semana[indice] = e;
-                            const diasSprd = [...dias];
-                            const indice2 = diasSprd.indexOf(diasSprd[index]);
-                            diasSprd[indice2].dias = semana;
-                            setDias(diasSprd);
+            <div key={index}>
+              {!dia.salvo ? (
+                <div className="caixa">
+                  <CaixaContainer>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                      }}
+                    >
+                      <input
+                        id="nomeDoHabito"
+                        type="text"
+                        placeholder="nome do hábito"
+                        onChange={(e) => {
+                          const valor = e.target.value;
+                          const allDays = [...dias];
+                          allDays[index].nomehabito = valor;
+                          setDias(allDays);
+                        }}
+                      />
+                      <ContainerButtons>
+                        {dia.dias.map((e) => {
+                          return (
+                            <DayOfTheWeek
+                              ativo={e.ativo}
+                              key={e.numeral}
+                              onClick={(event) => {
+                                event.preventDefault();
+                                const semana = [...dia.dias];
+                                const indice = semana.indexOf(e);
+                                e.ativo = !e.ativo;
+                                semana[indice] = e;
+                                const diasSprd = [...dias];
+                                const indice2 = diasSprd.indexOf(
+                                  diasSprd[index]
+                                );
+                                diasSprd[indice2].dias = semana;
+                                setDias(diasSprd);
+                              }}
+                            >
+                              {e.dia}
+                            </DayOfTheWeek>
+                          );
+                        })}
+                      </ContainerButtons>
+                      <SalvarECancelar key={dia.id}>
+                        <div className="cancelar">
+                          <p
+                            onClick={() => {
+                              const newContainers = [...dias];
+                              newContainers.splice(index, 1);
+                              setDias(newContainers);
+                            }}
+                          >
+                            Cancelar
+                          </p>
+                        </div>
+                        <button
+                          type="submit"
+                          className="salvar"
+                          onClick={(e) => {
+                            const allContainers = [...dias];
+                            allContainers[index].salvo = true;
+                            setDias(allContainers);
+                            handlePost(allContainers[index]);
+                            // deleteComponent(e);
                           }}
                         >
-                          {e.dia}
-                        </DayOfTheWeek>
-                      );
-                    })}
-                  </ContainerButtons>
-                  {!dia.salvo ? (
+                          <p>Salvar</p>
+                        </button>
+                      </SalvarECancelar>
+                      {/* {!dia.salvo ? (
                     <SalvarECancelar key={dia.id}>
                       <div className="cancelar">
                         <p
@@ -315,19 +297,22 @@ export default function Habitos() {
                       <button
                         type="submit"
                         className="salvar"
-                        onClick={() => {
+                        onClick={(e) => {
                           const allContainers = [...dias];
                           allContainers[index].salvo = true;
                           setDias(allContainers);
                           handlePost(allContainers[index]);
+                          deleteComponent(e);
                         }}
                       >
                         <p>Salvar</p>
                       </button>
                     </SalvarECancelar>
-                  ) : null}
-                </form>
-              </CaixaContainer>
+                  ) : null} */}
+                    </form>
+                  </CaixaContainer>
+                </div>
+              ) : null}
             </div>
           );
         })}
@@ -342,8 +327,6 @@ export default function Habitos() {
                 <ContainerDias>
                   <GetDia>
                     {getDia(caixa.days).map((dia, index) => {
-                      // console.log(dia);
-                      // console.log(caixa.days);
                       return (
                         <div
                           key={index}

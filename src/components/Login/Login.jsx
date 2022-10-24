@@ -9,9 +9,8 @@ import { UserContext } from "../../context/UserContext";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const navigate = useNavigate();
   const context = useContext(UserContext);
-
+  const navigate = useNavigate();
   const checkForm = () => {
     if (!validator.isEmail(email)) {
       alert("email invalido");
@@ -28,8 +27,8 @@ export default function Login() {
   const handlePost = async () => {
     try {
       if (!checkForm()) return;
-      const validou = context.signIn(email, senha);
-      if (validou) navigate("/habitos");
+      const rsp = context.signIn(email, senha);
+      if (rsp) navigate("/habitos");
     } catch (e) {
       console.log(e);
     }

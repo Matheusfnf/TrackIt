@@ -35,7 +35,6 @@ export const CaixaConcluido = styled.div`
   .iconeConcluido {
     width: 69px;
     height: 69px;
-    background-color: #ebebeb;
     border-radius: 5px;
     border: 1px solid #e7e7e7;
     display: flex;

@@ -10,10 +10,11 @@ import IconeConcluido from "../../images/Vector.png";
 import FootBar from "../FootBar/FootBar";
 import { useContext, useEffect, useState } from "react";
 import api from "../../service/api";
-import { CircularProgressbar } from "react-circular-progressbar";
+import { UserContext } from "../../context/UserContext";
 
 export default function Hoje() {
-  const [quadro, setQuadro] = useState();
+  const [quadro, setQuadro] = useState([]);
+  const context = useContext(UserContext);
 
   useEffect(() => {
     (async () => {
@@ -21,6 +22,10 @@ export default function Hoje() {
       setQuadro(response.data);
     })();
   }, []);
+
+  useEffect(() => {
+    context.setState(quadro);
+  }, [quadro]);
 
   const getToday = () => {
     const dia = new Date();
@@ -37,6 +42,28 @@ export default function Hoje() {
       today: map[dia.getDay()],
       date: `${dia.getDate()} /\ ${dia.getMonth() + 1}`,
     };
+  };
+
+  const check = async (id) => {
+    try {
+      const response = await api.post(`/api/v2/trackit/habits/${id}/check`);
+      if ((response.status = 204)) return true;
+      return false;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
+
+  const uncheck = async (id) => {
+    try {
+      const response = await api.post(`/api/v2/trackit/habits/${id}/uncheck`);
+      if ((response.status = 204)) return true;
+      return false;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
   };
 
   return (
@@ -61,14 +88,40 @@ export default function Hoje() {
                 </p>
                 <p className="recorde">Seu recorde: {caixa.highestSequence}</p>
               </Container>
-              <div className="iconeConcluido">
+              <div
+                style={{ background: caixa.done ? "#8FC549" : "#EBEBEB" }}
+                className="iconeConcluido"
+                onClick={() => {
+                  if (!caixa.done) {
+                    const post = check(caixa.id);
+                    if (post) {
+                      const sprd = [...quadro];
+                      const index = sprd.indexOf(caixa);
+                      sprd[index].done = !sprd[index].done;
+                      setQuadro(sprd);
+                      return;
+                    }
+                    return alert("erro");
+                  } else {
+                    const post = uncheck(caixa.id);
+                    if (post) {
+                      const sprd = [...quadro];
+                      const index = sprd.indexOf(caixa);
+                      sprd[index].done = !sprd[index].done;
+                      setQuadro(sprd);
+                      return;
+                    }
+                    return alert("erro");
+                  }
+                }}
+              >
                 <img src={IconeConcluido} />
               </div>
             </CaixaConcluido>
-            <FootBar />
           </QuadroContainer>
         );
       })}
+      <FootBar />
     </>
   );
 }
