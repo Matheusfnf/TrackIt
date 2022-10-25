@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../../images/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Inputstyled } from "./Cadastro.styles";
 import axios from "axios";
 import validator from "validator";
+import { UserContext } from "../../context/UserContext";
 
 export default function Cadastro() {
   const [email, setEmail] = useState("");
   const [nome, setNome] = useState("");
   const [senha, setSenha] = useState("");
   const [foto, setFoto] = useState("");
-
- 
+  const navigate = useNavigate();
+  const context = useContext(UserContext);
 
   const checkForm = () => {
     if (nome.length < 3 || nome.length > 20) {
@@ -29,27 +30,14 @@ export default function Cadastro() {
     if (!validator.isURL(foto)) {
       alert("foto invalida");
       return false;
+    } else {
+      return true;
     }
-
-    return true;
   };
 
   const handlePost = async () => {
-    try {
-      if (!checkForm()) return;
-      const response = await axios.post(
-        "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/sign-up",
-        {
-          email,
-          name: nome,
-          image: foto,
-          password: senha,
-        }
-      );
-      console.log(response);
-    } catch (e) {
-      console.log(e);
-    }
+    if (!checkForm()) return;
+    context.cadastro(email, nome, foto, senha);
   };
 
   return (

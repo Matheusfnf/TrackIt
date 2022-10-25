@@ -8,9 +8,7 @@ export const UserContext = createContext({});
 
 export function UserProvider({ children }) {
   const [state, setState] = useState([]);
-  const navigate = useNavigate()
-  
-
+  const navigate = useNavigate();
 
   async function signIn(email, senha) {
     try {
@@ -23,31 +21,40 @@ export function UserProvider({ children }) {
           maxAge: 60 * 60 * 24,
           path: "/",
         });
-        
-        
-
-        
 
         setCookie(undefined, "userauth.image", response.data.image, {
           maxAge: 60 * 60 * 24,
           path: "/",
         });
-        return "ok";
+        navigate("/habitos");
       }
-
-      
-      return false;
     } catch (e) {
       console.log(e);
-      navigate("/")
-      alert("Conta inválida, por favor faça seu cadastro!")
-      return false
-      
+      navigate("/");
+      alert("Conta inválida, por favor faça seu cadastro!");
+    }
+  }
+
+  async function cadastro(email, nome, foto, senha) {
+    try {
+      const response = await api.post("/api/v2/trackit/auth/sign-up", {
+        email: email,
+        name: nome,
+        image: foto,
+        password: senha,
+      });
+      if (response.status == 201) alert("Conta criada com sucesso!");
+      window.location.href = "/";
+      return true;
+    } catch (e) {
+      console.log(e);
+      alert(e.response.data.message);
+      return false;
     }
   }
 
   return (
-    <UserContext.Provider value={{ signIn, state, setState }}>
+    <UserContext.Provider value={{ cadastro, signIn, state, setState }}>
       {children}
     </UserContext.Provider>
   );

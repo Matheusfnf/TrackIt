@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Login from "./components/Login/Login";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Cadastro from "./components/Cadastro/Cadastro";
@@ -10,8 +10,6 @@ import Historico from "./components/Historico/Historico";
 import "react-circular-progressbar/dist/styles.css";
 
 function App() {
-  const [image, setImage] = useState();
-
   return (
     <div className="App">
       <BrowserRouter>
